@@ -1,28 +1,21 @@
-use std::fs::File;
-use std::io::{BufReader, BufRead};
-
 fn main() {
-  let input = File::open("./input.txt").expect("Input file not found.");
-  let reader = BufReader::new(input);
-  let mut result: u64 = 0;
+  let input = String::from(include_str!("./input.txt"));
+  let mut result: i64 = 0;
 
-  for (_, line) in reader.lines().enumerate() {
-    let line = line.unwrap();
-    let weight: u64 = line.parse().expect("Line is not a number!");
+  for (_, line) in input.lines().enumerate() {
+    let weight: i64 = line.parse().expect("Line is not a number!");
     result += calculate_fuel(weight);
   }
 
   println!("Fuel requirement: {}", result);
 }
 
-fn calculate_fuel(weight: u64) -> u64 {
-  let mut fuel_weight = weight / 3;
+fn calculate_fuel(weight: i64) -> i64 {
+  let fuel_weight = (weight / 3) - 2;
 
-  if fuel_weight <= 2 {
+  if fuel_weight <= 0 {
     return 0;
   }
-
-  fuel_weight -= 2;
 
   return fuel_weight + calculate_fuel(fuel_weight);
 }
