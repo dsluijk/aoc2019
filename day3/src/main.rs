@@ -4,7 +4,24 @@ fn main() {
     let path1 = String::from(split.next().expect("Not enough input lines"));
     let path2 = String::from(split.next().expect("Not enough input lines"));
 
-    println!("Distance: {}", distance(path1, path2));
+    println!("Distance: {}", shortest(path1, path2));
+}
+
+fn shortest(path1: String, path2: String) -> usize {
+    let vec1 = get_path(path1);
+    let vec2 = get_path(path2);
+
+    let mut distances: Vec<(usize)> = Vec::new();
+    for (i, one) in vec1.iter().enumerate() {
+        for (j, two) in vec2.iter().enumerate() {
+            if one.0 == two.0 && one.1 == two.1 {
+                distances.push(i + j);
+            }
+        }
+    }
+
+    distances.sort();
+    return distances[0] + 2;
 }
 
 fn distance(path1: String, path2: String) -> i32 {
@@ -79,20 +96,34 @@ fn get_path(path: String) -> Vec<(i32, i32)> {
 
 #[cfg(test)]
 mod tests {
-    use crate::distance;
+    use crate::{distance, shortest};
 
     #[test]
-    fn example_1() {
+    fn distance_1() {
         let path1 = String::from("R75,D30,R83,U83,L12,D49,R71,U7,L72");
         let path2 = String::from("U62,R66,U55,R34,D71,R55,D58,R83");
         assert_eq!(distance(path1, path2), 159);
     }
 
     #[test]
-    fn example_2() {
+    fn distance_2() {
         let path1 = String::from("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51");
         let path2 = String::from("U98,R91,D20,R16,D67,R40,U7,R15,U6,R7");
 
-        assert_ne!(distance(path1, path2), 135);
+        assert_eq!(distance(path1, path2), 135);
+    }
+
+    #[test]
+    fn shortest_1() {
+        let path1 = String::from("R75,D30,R83,U83,L12,D49,R71,U7,L72");
+        let path2 = String::from("U62,R66,U55,R34,D71,R55,D58,R83");
+        assert_eq!(shortest(path1, path2), 610);
+    }
+
+    #[test]
+    fn shortest_2() {
+        let path1 = String::from("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51");
+        let path2 = String::from("U98,R91,D20,R16,D67,R40,U7,R15,U6,R7");
+        assert_eq!(shortest(path1, path2), 410);
     }
 }
